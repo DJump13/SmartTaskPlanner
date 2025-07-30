@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import TaskList from '../components/TaskList'
 import TaskForm from '../components/TaskForm'
-import { fetchTasks, createTask } from '../utils/tasksAPI'
+import { fetchTasks, createTask, deleteTask } from '../utils/tasksAPI'
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -36,6 +36,16 @@ const Dashboard = () => {
         }
     };
 
+    const handleDelete = async (taskId) => {
+        try {
+            await deleteTask(taskId);
+            await loadTasks();
+        } catch (error) {
+            console.error("Failed to delete task: ", error);
+            alert("Error deleting task. Please try again.");
+        }
+    }
+
     useEffect(() => {
         loadTasks();
     }, []);
@@ -47,7 +57,7 @@ const Dashboard = () => {
             <h1>Your Tasks</h1>
 
             <TaskForm onSubmit={handleAddTask} />
-            <TaskList tasks={tasks} loading={loading} />
+            <TaskList tasks={tasks} loading={loading} handleDelete={handleDelete}/>
         </div>
     );
 }

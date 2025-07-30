@@ -25,3 +25,19 @@ exports.createTask = async (req, res) => {
     res.status(500).json({ error: "Failed to create task." });
   }
 };
+
+exports.deleteTask = async (req, res) => {
+  try {
+    const task = await Task.findOneAndDelete({
+      _id: req.params.id,
+      user: req.user._id,
+    });
+
+    if (!task)
+      return res.status(404).json({ error: "Task not found or unauthorized." });
+
+    res.json({ message: "Task deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ error: "Server error deleting task" });
+  }
+};
