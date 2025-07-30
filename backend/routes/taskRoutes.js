@@ -3,6 +3,7 @@ const {
   getTasks,
   createTask,
   deleteTask,
+  updateTask,
 } = require("../controllers/taskController");
 const auth = require("../middleware/authMiddleware");
 
@@ -16,5 +17,8 @@ router.post("/", auth, createTask);
 
 // DELETE /api/tasks/:id
 router.delete("/:id", auth, deleteTask);
+
+// PUT /api/tasks/:id
+router.put("/:id", auth, updateTask);
 
 module.exports = router;

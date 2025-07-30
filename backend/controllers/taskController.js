@@ -33,11 +33,31 @@ exports.deleteTask = async (req, res) => {
       user: req.user._id,
     });
 
-    if (!task)
-      return res.status(404).json({ error: "Task not found or unauthorized." });
+    if (!task) return res.status(404).json({ error: "Task not found." });
+    if (task.user.toString() !== req.user._id.toString())
+      return res.status(401).json({ message: "Not authorized." });
 
     res.json({ message: "Task deleted successfully" });
   } catch (err) {
     res.status(500).json({ error: "Server error deleting task" });
+  }
+};
+
+exports.updateTask = async (req, res) => {
+  try {
+    const task = await Task.findById(req.params.id);
+
+    if (!task) return res.status(404).json({ message: "Task not found." });
+    if (task.user.toString() !== req.user._id.toString())
+      return res.status(401).json({ message: "Not authorized." });
+
+    const updatedTask = await Task.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+
+    res.json(updatedTask);
+  } catch (err) {
+    console.error("Error updating task.", err);
+    res.status(500).json({ message: "Server error updating task." });
   }
 };

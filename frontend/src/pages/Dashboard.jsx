@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import TaskList from '../components/TaskList'
-import TaskForm from '../components/TaskForm'
+import Task from '../components/Task';
+import TaskForm from '../components/TaskForm';
 import { fetchTasks, createTask, deleteTask } from '../utils/tasksAPI'
 
 const Dashboard = () => {
@@ -10,19 +10,18 @@ const Dashboard = () => {
     const [tasks, setTasks] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        navigate('/login');
-    }
+    useEffect(() => {
+        loadTasks();
+    }, []);
 
     const loadTasks = async () => {
         try {
             const tasksData = await fetchTasks();
-            //console.log("Fetched tasks: ", tasksData);
             setTasks(tasksData.tasks);
-            setLoading(false);
         } catch (error) {
             console.error(error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -46,18 +45,38 @@ const Dashboard = () => {
         }
     }
 
-    useEffect(() => {
-        loadTasks();
-    }, []);
+    const handleUpdate = (updatedTask) => {
+        console.log("Task to update: ", updatedTask);
+        setTasks(tasks.map(task => task._id === updatedTask._id ? updatedTask : task));
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        navigate('/login');
+    }
 
     return (
         <div>
             <h1>Welcome to your Dashboard</h1>
             <button onClick={handleLogout}>Logout</button>
-            <h1>Your Tasks</h1>
-
+            <br/>
             <TaskForm onSubmit={handleAddTask} />
-            <TaskList tasks={tasks} loading={loading} handleDelete={handleDelete}/>
+            <br/>
+            <h1>Your Tasks</h1>
+            {loading ? (
+                <p>Loading tasks...</p>  // Show this while fetching
+            ) : tasks.length === 0 ? (
+                <p>No tasks found.</p>   // Show if no tasks after loading
+            ) : (
+                tasks.map(task => (
+                    <Task
+                        key={task._id}
+                        task={task}
+                        handleDelete={handleDelete}
+                        handleUpdate={handleUpdate}
+                    />
+                ))
+            )}
         </div>
     );
 }
