@@ -8,13 +8,20 @@ exports.getTasks = async (req, res) => {
 
 //create a new task for the logged in user
 exports.createTask = async (req, res) => {
-  const { title, dueDate } = req.body;
+  const { title, description, dueDate, priority } = req.body;
 
-  const task = await Task.create({
-    user: req.user,
-    title,
-    dueDate,
-  });
+  try {
+    const newTask = await Task.create({
+      user: req.user.id,
+      title,
+      description,
+      dueDate,
+      ...(priority && { priority }), //only include priority if provided
+    });
 
-  res.status(201).json({ task });
+    res.status(201).json(newTask);
+  } catch (err) {
+    console.error("Error creating task: ", err.message);
+    res.status(500).json({ error: "Failed to create task." });
+  }
 };
