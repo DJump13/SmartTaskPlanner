@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Task from '../components/Task';
 import TaskForm from '../components/TaskForm';
@@ -7,7 +6,6 @@ import { groupTasksByStatus } from '../utils/groupTasks';
 import '../styles/Dashboard.css'
 
 const Dashboard = () => {
-    const navigate = useNavigate();
     
     const [tasks, setTasks] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -72,16 +70,8 @@ const Dashboard = () => {
         }
     };
 
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        navigate('/login');
-    }
-
     return (
         <div className='dashboard-container'>
-            <h1>Smart Task Planner</h1>
-            <button onClick={handleLogout}>Logout</button>
-            <br />
             <button onClick={toggleForm}>
                 {showForm ? "Cancel" : "Add New Task"}
             </button>
