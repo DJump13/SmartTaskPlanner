@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Task from '../components/Task';
 import TaskForm from '../components/TaskForm';
 import { fetchTasks, createTask, deleteTask } from '../utils/tasksAPI'
+import { groupTasksByStatus } from '../utils/groupTasks';
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -65,17 +66,26 @@ const Dashboard = () => {
             <h1>Your Tasks</h1>
             {loading ? (
                 <p>Loading tasks...</p>  // Show this while fetching
-            ) : tasks.length === 0 ? (
-                <p>No tasks found.</p>   // Show if no tasks after loading
             ) : (
-                tasks.map(task => (
-                    <Task
-                        key={task._id}
-                        task={task}
-                        handleDelete={handleDelete}
-                        handleUpdate={handleUpdate}
-                    />
-                ))
+                <>
+                    {Object.entries(groupTasksByStatus(tasks)).map(([status, group]) => (
+                        <div key={status}>
+                            <h2>{status.toUpperCase()}</h2>
+                            {group.length === 0 ? (
+                                <p>No tasks</p>
+                            ) : (
+                            group.map((task) => (
+                                <Task
+                                    key={task._id}
+                                    task={task}
+                                    handleDelete={handleDelete}
+                                    handleUpdate={handleUpdate}
+                                />
+                            ))
+                            )}
+                        </div>
+                    ))}
+                </>
             )}
         </div>
     );

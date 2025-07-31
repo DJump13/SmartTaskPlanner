@@ -24,6 +24,13 @@ const Task = ({ task, handleUpdate, handleDelete }) => {
             <p>{task.description}</p>
             <p>Due: {task.dueDate ? task.dueDate.slice(0, 10) : 'Not set'}</p>
             <p>Priority: {task.priority || "None"}</p>
+            <label htmlFor="completed">Completed</label>
+            <input
+                type="checkbox"
+                checked={task.completed}
+                onChange={() => handleUpdate({ ...task, completed: !task.completed })}
+            />
+            <br/>
 
             <button onClick={openModal}>Edit</button>
             <button onClick={() => handleDelete(task._id)}>Delete</button>
