@@ -18,6 +18,8 @@ const Task = ({ task, handleUpdate, handleDelete }) => {
     else if (due && due.isBefore(today)) statusClass = 'status-overdue';
     else if (due && due.isSame(today)) statusClass = 'status-due-today';
 
+    const priorityClass = `priority-${task.priority || 'none'}`;
+
     const handleSave = async (updatedFields) => {
         try {
             const res = await editTask(task._id, updatedFields);
@@ -29,7 +31,8 @@ const Task = ({ task, handleUpdate, handleDelete }) => {
     }
 
     return (
-        <div className={`task-card ${statusClass}`}>
+        <div className={`task-card ${statusClass} ${priorityClass}`} style={{ position: 'relative' }}>
+            
             <div className="task-header">
                 <h3 className="task-title">{task.title}</h3>
                 <input
@@ -41,14 +44,11 @@ const Task = ({ task, handleUpdate, handleDelete }) => {
 
             <p className="task-desc">{task.description}</p>
             {task.dueDate && <p>Due: {dayjs(task.dueDate).format('MMM D, YYYY')}</p>}
-            {task.priority && <p>Priority: {task.priority}</p>}
 
             <div className="task-footer">
                 <div className="task-buttons">
                 <button onClick={openModal}>Edit</button>
                 <button onClick={() => handleDelete(task._id)}>Delete</button>
-                {/* <button onClick={() => handleUpdate({ ...task, editing: true })}>Edit</button>
-                <button onClick={() => handleDelete(task._id)}>Delete</button> */}
 
                 <EditTaskModal
                     task={task}

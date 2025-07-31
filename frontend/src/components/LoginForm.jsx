@@ -1,3 +1,4 @@
+import '../styles/LoginForm.css';
 
 const LoginForm = ({ formData, handleChange, handleSubmit, error }) => (
   <div className="login-container">

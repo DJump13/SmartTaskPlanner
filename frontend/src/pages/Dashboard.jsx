@@ -13,6 +13,13 @@ const Dashboard = () => {
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
 
+    const priorityRank = {
+        high: 3,
+        medium: 2,
+        low: 1,
+        "": 0, // no priority
+    };
+
     useEffect(() => {
         loadTasks();
     }, []);
@@ -36,6 +43,7 @@ const Dashboard = () => {
         try {
             await createTask(taskData);
             await loadTasks();
+            toggleForm();
         } catch (error) {
             console.error("Failed to add task: ", error);
             throw error; //allow TaskForm to handle it too
@@ -70,8 +78,8 @@ const Dashboard = () => {
     }
 
     return (
-        <div>
-            <h1>Welcome to your Dashboard</h1>
+        <div className='dashboard-container'>
+            <h1>Smart Task Planner</h1>
             <button onClick={handleLogout}>Logout</button>
             <br />
             <button onClick={toggleForm}>
@@ -79,10 +87,13 @@ const Dashboard = () => {
             </button>
 
             {showForm && (
-                <>
-                    <TaskForm onSubmit={handleAddTask} />
-                    <br />
-                </>
+                <div className="modal-backdrop">
+                    <div className="modal">
+                        <h2>Add New Task</h2>
+                        <TaskForm onSubmit={handleAddTask} />
+                        <button onClick={toggleForm}>Cancel</button>
+                    </div>
+                </div>
             )}
 
             <h1>Your Tasks</h1>
@@ -90,27 +101,33 @@ const Dashboard = () => {
             <p>Loading tasks...</p>
             ) : (
                 <div className="task-columns-container" style={{ display: 'flex', gap: '1rem' }}>
-                    {Object.entries(groupTasksByStatus(tasks)).map(([status, group]) => (
-                        <div
-                            key={status}
-                            className="task-section"
-                            style={{ flex: 1, minWidth: '250px' }}
-                        >
-                            <h2 className="section-header">{status.toUpperCase()}</h2>
-                            {group.length === 0 ? (
-                                <p>No tasks</p>
-                            ) : (
-                                group.map((task) => (
-                                    <Task
-                                        key={task._id}
-                                        task={task}
-                                        handleDelete={handleDelete}
-                                        handleUpdate={handleUpdate}
-                                    />
-                                ))
-                            )}
-                        </div>
-                    ))}
+                    {Object.entries(groupTasksByStatus(tasks)).map(([status, group]) => {
+                        const sortedGroup = [...group].sort((a, b) => {
+                            return (priorityRank[b.priority] || 0) - (priorityRank[a.priority] || 0);
+                        });
+
+                        return (
+                            <div
+                                key={status}
+                                className="task-section"
+                                style={{ flex: 1, minWidth: '250px' }}
+                            >
+                                <h2 className="section-header">{status.toUpperCase()}</h2>
+                                {sortedGroup.length === 0 ? (
+                                    <p>No tasks</p>
+                                ) : (
+                                    sortedGroup.map((task) => (
+                                        <Task
+                                            key={task._id}
+                                            task={task}
+                                            handleDelete={handleDelete}
+                                            handleUpdate={handleUpdate}
+                                        />
+                                    ))
+                                )}
+                            </div>
+                        );
+                    })}
                 </div>
             )}
         </div>

@@ -34,7 +34,6 @@ const TaskForm = ({ onSubmit }) => {
 
     return (
         <div className="form-card">
-            <h2 className="form-title">Add New Task</h2>
             {error && <p className="form-error">{error}</p>}
 
             <form onSubmit={handleSubmit} className="form-content">

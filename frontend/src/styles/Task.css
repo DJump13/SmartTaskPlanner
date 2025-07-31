@@ -30,20 +30,24 @@
     margin-top: 1rem;
 }
 
-.task-buttons button {
+/* .task-buttons button {
     margin-left: 0.5rem;
+} */
+
+.task-card.priority-low {
+  border-left-color: #4caf50; /* green */
 }
 
-.status-overdue {
-    border-left-color: #e63946;
+.task-card.priority-medium {
+  border-left-color: #ffd000; /* orange */
 }
 
-.status-due-today {
-    border-left-color: #f1c40f;
+.task-card.priority-high {
+  border-left-color: #f44336; /* red */
 }
 
-.status-upcoming {
-    border-left-color: #2a9d8f;
+.task-card.priority-none {
+  border-left-color: #949494; /* red */
 }
 
 .status-completed {
