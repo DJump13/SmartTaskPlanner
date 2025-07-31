@@ -4,25 +4,25 @@ export const groupTasksByStatus = (tasks) => {
   const today = dayjs().startOf("day");
 
   const grouped = {
-    overdue: [],
-    today: [],
-    upcoming: [],
-    completed: [],
+    Overdue: [],
+    "Due Today": [],
+    Upcoming: [],
+    Completed: [],
   };
 
   tasks.forEach((task) => {
     if (task.completed) {
-      grouped.completed.push(task);
+      grouped["Completed"].push(task);
     } else if (!task.dueDate) {
-      grouped.upcoming.push(task); //fallback
+      grouped["Upcoming"].push(task); //fallback
     } else {
       const due = dayjs(task.dueDate).startOf("day");
       if (due.isBefore(today)) {
-        grouped.overdue.push(task);
+        grouped["Overdue"].push(task);
       } else if (due.isSame(today)) {
-        grouped.today.push(task);
+        grouped["Due Today"].push(task);
       } else {
-        grouped.upcoming.push(task);
+        grouped["Upcoming"].push(task);
       }
     }
   });

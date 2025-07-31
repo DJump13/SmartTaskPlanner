@@ -1,0 +1,54 @@
+.task-card {
+    border: 1px solid #ddd;
+    border-left: 6px solid #ccc;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.task-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.task-desc {
+    margin: 0.5rem;
+}
+
+.task-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
+.task-buttons button {
+    margin-left: 0.5rem;
+}
+
+.status-overdue {
+    border-left-color: #e63946;
+}
+
+.status-due-today {
+    border-left-color: #f1c40f;
+}
+
+.status-upcoming {
+    border-left-color: #2a9d8f;
+}
+
+.status-completed {
+    border-left-color: #6c757d;
+    background-color: #f8f9fa;
+    text-decoration: line-through;
+    opacity: 0.7;
+}
